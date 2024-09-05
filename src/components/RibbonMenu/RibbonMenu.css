@@ -1,0 +1,75 @@
+#ribbon_bar {
+    background-color: #f5f5f5;
+    line-height: 30px;
+    position: relative;
+    height: 150px;
+}
+
+/* Icon's container */
+#ribbon_bar section main > div {
+    overflow: hidden;
+}
+
+
+/* Tabs */
+#ribbon_bar input[type=radio] {
+    display: none;
+}
+
+#ribbon_bar label {
+    padding: 0 10px;
+    border-bottom: 2px solid transparent;
+    margin-right: 5px;
+}
+
+#ribbon_bar > :nth-child(2) {
+    margin-left: 10px;
+}
+
+
+#ribbon_bar label:hover {
+    border-color: var(--border-color);
+}
+
+#ribbon_bar input[type=radio]:checked + label {
+    border-color: var(--accent-bg-color);
+}
+
+
+
+/* Panel with the icons associated to the tab */
+#ribbon_bar section {
+    height: 100px;
+    width: 100%;
+    position: absolute;
+    top: 30px;
+    display: none;
+    padding: 8px 10px;
+}
+
+#ribbon_bar section > div {
+    background-color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 10px;
+}
+
+#ribbon_bar section main {
+    height: 96px;
+    display: inline-block;
+    border-right: 1px solid var(--border-color);
+    margin: 4px 0;
+    padding: 0 8px;
+}
+
+#ribbon_bar section footer {
+    height: 20px;
+    line-height: 20px;
+    width: 100%;
+    display: block;
+    text-align: center;
+    font-size: 10px;
+}
+
+#ribbon_bar input[type=radio]:checked + label + section {
+    display: block;
+}
