@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './RibbonMenu.css';
 import HeaderButton from '../HeaderButton/HeaderButton';
 
-function RibbonMenu() {
+function RibbonMenu(props) {
+
   const menus = [{
     id: 'menu_file',
     title: 'File',
@@ -161,8 +162,10 @@ function RibbonMenu() {
     }]*/
   }];
 
-  const onClickEvent = () => {
-    alert('Button clicked');
+  const onClickEvent = (id) => {
+    if (props.clickButton) {
+      props.clickButton(id);
+    }
   };
 
   const [selectedValue, setSelectedValue] = useState('menu_file');
@@ -184,7 +187,7 @@ function RibbonMenu() {
               <main>
 
               {group.items.map((item, k) => (
-                <HeaderButton onClick={onClickEvent} icon={item.icon} text={item.text} />
+                <HeaderButton onClick={() => onClickEvent(item.id)} icon={item.icon} text={item.text} />
               ))}
               <footer>{group.title}</footer>
               </main>

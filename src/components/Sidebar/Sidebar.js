@@ -12,11 +12,14 @@ function Sidebar(props) {
 
 
   const openFile = (id) => {
-    alert('open file' + id)
+    if(props.openFile) {
+      props.openFile(id);
+    }
+
   };
   
 
-  const [lateralTab, setLateralTab] = useState('');
+  const [lateralTab, setLateralTab] = useState('tab_files');
   const clickButton = (id) => {
     if(lateralTab == id) {
       id = '';
