@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import './DataGrid.css';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -10,7 +10,13 @@ function DataGrid(props) {
     if (props.idFile) {
       loadGrid(props.idFile);
     }
-  }, [props.idFile]); // When idFile changes
+  }, [props.idFile]);
+  
+  useEffect(() => {
+    if (props.selectedCell) {
+      selectCell(props.selectedCell.row, props.selectedCell.column);
+    }
+  }, [props.selectedCell]);
 
 
   // Maneja eventos de teclado globales
@@ -38,10 +44,10 @@ function DataGrid(props) {
  const [idFile, setIdFile] = useState(null);
  const [columnDefs, setColumnDefs] = useState([]);
  const [rowData, setRowData] = useState([]);
- const [validationErrors, setValidationErrors] = useState([]);
  const [ctrlPressed, setCtrlPressed] = useState(false);
  const [selectedColumns, setSelectedColumns] = useState([]);
  const [selectedRows, setSelectedRows] = useState([]);
+ const gridRef = useRef();
 
   const defaultColDef = {
     sortable: false,
@@ -62,13 +68,21 @@ function DataGrid(props) {
 
      setColumnDefs(data.header);
      setRowData(data.values);
-     setValidationErrors(data.validationErrors); 
-
    } catch (error) {
      console.error('Error loading data: ', error);
    }
  };
 
+ const onGridReady = (params) => {
+  gridRef.current = params.api;
+};
+
+  const selectCell = (row, column) => {
+    gridRef.current.startEditingCell({
+        rowIndex: row,
+        colKey: column
+    });
+  }
 
   const onHeaderClick = (params) => {
     setSelectedRows([]);
@@ -214,6 +228,7 @@ function DataGrid(props) {
     <div className="ag-theme-quartz" style={{ height: '100%' }} >
       <AgGridReact
         rowData={rowData}
+        onGridReady={onGridReady} 
         defaultColDef={defaultColDef}
         gridOptions={gridOptions}
         onCellClicked={onCellClick}
