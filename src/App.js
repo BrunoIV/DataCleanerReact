@@ -7,6 +7,7 @@ import { normalize } from './services/apiService';
 import { validate } from './services/apiService';
 import { fillAutoIncremental } from './services/apiService';
 import { fillFixedValue } from './services/apiService';
+import { addColumn } from './services/apiService';
 
 
 
@@ -16,66 +17,96 @@ function App() {
 	const [selectedCell, setSelectedCell] = useState(null);
 	const [validationErrors, setValidationErrors] = useState([]);
 	const [refreshGrid, setrefreshGrid] = useState(0);
+	const columns = [1];
 
 	// Función que recibe el ID desde el hijo
 	const openFileWithId = (id) => {
 	  setSelectedId(id);
 	};
 
+	const doValidation = (menu) => {
+		const fn = menu.split('_')[1];
+
+		validate(columns, 'validate_' + fn, selectedId)
+		.then(response => {
+			setValidationErrors(response);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	};
+
+	const doNormalize = (menu) => {
+		const fn = menu.split('_')[1];
+
+		normalize(columns, fn, selectedId)
+		.then(response => {
+			doRefreshGrid();
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	};
+
+	const doFillAutoIncremental = () => {
+		fillAutoIncremental(columns, selectedId)
+		.then(response => {
+			doRefreshGrid();
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	};
+
+	const doFillFixedValue = () => {
+		const newValue = prompt('New value?');
+		if(newValue !== null) {
+			fillFixedValue(columns, selectedId, newValue)
+			.then(response => {
+				doRefreshGrid();
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		}
+	};
 	
+
+	const doRefreshGrid = () => {
+		setrefreshGrid(prevKey => prevKey + 1);
+	}
+
 	const clickMenuButton = (menu) => {
-		let fn = '';
-		if(menu.startsWith('validation_') || menu.startsWith('normalization_')) {
-			const ar = menu.split('_');
-			menu = ar[0];
-			fn = ar[1];
+
+		const actions = {
+
+			//Structure
+			//add_column_end: (param) => doAddColumn(),
+
+			//Normalizations
+			normalization_uppercase: (param) => doNormalize(param),
+			normalization_lowercase: (param) => doNormalize(param),
+			normalization_trim: (param) => doNormalize(param),
+			normalization_capitalize: (param) => doNormalize(param),
+
+			//Validations
+			validation_email: (param) => doValidation(param),
+			validation_number: (param) => doValidation(param),
+			validation_alpha: (param) => doValidation(param),
+			validation_alfanumeric: (param) => doValidation(param),
+
+			//Fill
+			fill_column_numbered: (param) => doFillAutoIncremental(),
+			fill_fixed_value: (param) => doFillFixedValue()
+		};
+
+
+		const fn = actions[menu];
+		if (fn) {
+			fn(menu);
+		} else {
+		  console.error(`Invalid activo "${menu}"`);
 		}
-
-		const columns = [1];
-
-		switch(menu) {
-			case 'validation':
-				validate(columns, 'validate_' + fn, selectedId)
-				.then(response => {
-					setValidationErrors(response);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-
-				break;
-			case 'normalization':
-				normalize(columns, fn, selectedId)
-				.then(response => {
-					console.log(response);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-
-				break;
-			case 'fill_column_numbered':
-				fillAutoIncremental(columns, selectedId)
-				.then(response => {
-					setrefreshGrid(prevKey => prevKey + 1);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-
-				break;
-			case 'fill_fixed_value':
-				fillFixedValue(columns, selectedId)
-				.then(response => {
-					setrefreshGrid(prevKey => prevKey + 1);
-				})
-				.catch(error => {
-					console.error('Error:', error);
-				});
-
-				break;
-		}
-
 	}
 
 	const selectCell = (line, column) => {

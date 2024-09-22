@@ -19,16 +19,26 @@ export const validate = async (columns, functionName, idFile) => {
     }, 'data/validate');
 }
 
-export const fillFixedValue = async (columns, idFile) => {
-    const newValue = prompt('New value?');
-    if(newValue !== null) {
+export const addColumn = async (position, idFile) => {
+    let name = prompt('Column name?');
+
+    if(name !== null && name.trim() !== '') {
         return sendPost({
-            columns: columns.join(','),
-            idFile: idFile,
-            newValue: newValue
-        }, 'data/fillFixedValue');
+            name: name,
+            position: position,
+            idFile: idFile
+        }, 'structure/addColumn');
     }
     return null;
+}
+
+
+export const fillFixedValue = async (columns, idFile, newValue) => {
+    return sendPost({
+        columns: columns.join(','),
+        idFile: idFile,
+        newValue: newValue
+    }, 'data/fillFixedValue');
 }
 
 export const fillAutoIncremental = async (columns, idFile) => {
