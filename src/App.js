@@ -62,16 +62,22 @@ function App() {
 				<Sidebar openFile={openFileWithId}/>
 				<div class="flex-grow-1">
 					<div class="h-100 w-100 d-flex flex-column">
-						<div id="row_grid">
-							<DataGrid selectedCell={selectedCell} idFile={selectedId} />
-						</div>
+						<DataGrid class="flex-grow-1" selectedCell={selectedCell} idFile={selectedId} />
 
-						<div class="flex-grow-1 overflow-scroll" id="row_validation">
-							{validationErrors.map((error, index) => (
-								<div key={index} onClick={() => selectCell(error.line, error.column)}>
-								{error.line} {error.error}
-								</div>
-							))}
+						<div id="status_bar">
+
+							<input type="radio" name="status_bar" id="status_bar_validations" checked />
+							<label for="status_bar_validations">Validations</label>
+
+							<div id="validations" class="overflow-scroll px-2">
+								{validationErrors.map((error, index) => (
+									
+									<div key={index} onClick={() => selectCell(error.line, error.column)}>
+									<span class="material-symbols-outlined">error</span>
+                					<span>{error.error} <small>:{error.line + 1}</small></span>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>

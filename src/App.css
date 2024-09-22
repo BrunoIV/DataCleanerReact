@@ -14,18 +14,13 @@
 
 body {
   font-size: 14px;
+  overflow: hidden;
 }
 
 html, body, #root {
   height: 100%;
 }
 
-#row_grid {
-  resize: vertical;
-  overflow: hidden;
-  min-height: 500px;
-  height: calc(100% - 90px);
-}
 
 #row_validation {
   background-color: #000;
@@ -62,6 +57,56 @@ html, body, #root {
 }
 
 
-.validation_error {
-  background-color: red !important;
+
+
+
+#validations {
+  height: 150px;
+}
+
+#validations > div > * {
+  line-height: 20px;
+}
+
+#status_bar .material-symbols-outlined {
+  font-size: 13px !important;
+  float: left;
+  margin-right: 5px;
+}
+
+#status_bar {
+  background: linear-gradient(
+      to bottom,
+      var(--panel-bg-color) 0px,
+      var(--panel-bg-color) 24px,
+      var(--border-color) 24px, 
+      var(--border-color) 25px,
+      white 25px,
+      white 100%
+  );
+  border-left: 1px solid var(--border-color);
+
+  min-height: 0;
+  font-size: 13px;
+  height: 180px;
+}
+
+#status_bar input[type=radio] {
+  display: none;
+}
+
+#status_bar label {
+  padding: 0 10px;
+  line-height: 23px;
+  border-bottom: 2px solid transparent;
+  margin-right: 5px;
+  margin-bottom: 4px;
+}
+
+#status_bar label:hover {
+  border-color: var(--border-color);
+}
+
+#status_bar input[type=radio]:checked + label {
+  border-color: var(--accent-bg-color);
 }
