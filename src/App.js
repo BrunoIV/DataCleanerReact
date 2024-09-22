@@ -55,10 +55,6 @@ function App() {
 
   return (
 	<div class="h-100 w-100 d-flex flex-column">
-		<div id="title_bar">
-		DataCleaner
-		</div>
-
 		<RibbonMenu clickButton={clickMenuButton} />
 
 		<div class="flex-grow-1">
