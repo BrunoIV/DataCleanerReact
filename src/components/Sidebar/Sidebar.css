@@ -56,6 +56,11 @@
     border-right: 1px solid var(--border-color);
 }
 
+#side_tabs :first-child {
+    border-top: 0 !important;
+}
+
+
 #side_tabs span.active {
     border-right: 1px solid #fff;
     background: #fff;

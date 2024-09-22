@@ -61,7 +61,9 @@ function Sidebar(props) {
     <div id="sidebar">
       <div id="side_tabs">
       {lateralIcons.map((icon, index) => (
-        <span active={lateralTab === icon.id} class="material-symbols-outlined" onClick={() => clickButton(icon.id)}>
+        <span 
+          className={`material-symbols-outlined ${lateralTab === icon.id ? 'active' : ''}`} 
+          onClick={() => clickButton(icon.id)}>
           {icon.icon}
         </span>
       ))}
