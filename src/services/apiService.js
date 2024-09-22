@@ -19,6 +19,25 @@ export const validate = async (columns, functionName, idFile) => {
     }, 'data/validate');
 }
 
+export const fillFixedValue = async (columns, idFile) => {
+    const newValue = prompt('New value?');
+    if(newValue !== null) {
+        return sendPost({
+            columns: columns.join(','),
+            idFile: idFile,
+            newValue: newValue
+        }, 'data/fillFixedValue');
+    }
+    return null;
+}
+
+export const fillAutoIncremental = async (columns, idFile) => {
+    return sendPost({
+        columns: columns.join(','),
+        idFile: idFile
+    }, 'data/fillAutoIncremental');
+}
+
 export const sendPost = async (data, url) => {
     const formData = new URLSearchParams();
 

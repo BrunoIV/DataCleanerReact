@@ -5,12 +5,17 @@ import Sidebar from './components/Sidebar/Sidebar';
 import { useState } from 'react';
 import { normalize } from './services/apiService';
 import { validate } from './services/apiService';
+import { fillAutoIncremental } from './services/apiService';
+import { fillFixedValue } from './services/apiService';
+
+
 
 function App() {
 
 	const [selectedId, setSelectedId] = useState(null);
 	const [selectedCell, setSelectedCell] = useState(null);
 	const [validationErrors, setValidationErrors] = useState([]);
+	const [refreshGrid, setrefreshGrid] = useState(0);
 
 	// Función que recibe el ID desde el hijo
 	const openFileWithId = (id) => {
@@ -28,25 +33,49 @@ function App() {
 
 		const columns = [1];
 
-		let promise = null;
 		switch(menu) {
 			case 'validation':
-				promise = validate(columns, 'validate_' + fn, selectedId);
+				validate(columns, 'validate_' + fn, selectedId)
+				.then(response => {
+					setValidationErrors(response);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
 				break;
 			case 'normalization':
-				promise = normalize(columns, fn, selectedId);
+				normalize(columns, fn, selectedId)
+				.then(response => {
+					console.log(response);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
+				break;
+			case 'fill_column_numbered':
+				fillAutoIncremental(columns, selectedId)
+				.then(response => {
+					setrefreshGrid(prevKey => prevKey + 1);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
+				break;
+			case 'fill_fixed_value':
+				fillFixedValue(columns, selectedId)
+				.then(response => {
+					setrefreshGrid(prevKey => prevKey + 1);
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
 				break;
 		}
 
-		if(promise != null) {
-			promise.then(response => {
-				setValidationErrors(response);
-				console.log(response);
-			})
-			.catch(error => {
-				console.error('Error:', error);
-			});
-		}
 	}
 
 	const selectCell = (line, column) => {
@@ -63,7 +92,7 @@ function App() {
 				<div class="flex-grow-1">
 					<div class="h-100 w-100 d-flex flex-column">
 						<div class="flex-grow-1">
-							<DataGrid selectedCell={selectedCell} idFile={selectedId} />
+							<DataGrid key={refreshGrid} selectedCell={selectedCell} idFile={selectedId} />
 						</div>
 
 						<div id="status_bar">
