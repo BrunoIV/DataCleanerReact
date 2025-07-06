@@ -3,6 +3,7 @@ import './Sidebar.css';
 
 const Sidebar = forwardRef((props, ref) => {
 
+  const [selectedFileId, setSelectedFileId] = useState(null);
 
   const lateralIcons = [{
     id: 'tab_files',
@@ -15,6 +16,7 @@ const Sidebar = forwardRef((props, ref) => {
       props.openFile(id);
     }
 
+    setSelectedFileId(id);
   };
   
 
@@ -95,7 +97,7 @@ const Sidebar = forwardRef((props, ref) => {
 
       <ul>
         {files.map((file, index) => (
-        <li onDoubleClick={() => openFile(file.id)}>
+        <li onClick={() => openFile(file.id)} className={file.id === selectedFileId ? 'selected' : ''} >
           <span class="material-symbols-outlined">draft</span> { file.name }
           <span className={`material-symbols-outlined ${file.unsavedChanges === true ? 'd-block' : 'd-none'}`} title="Unsaved changes">warning</span>
         </li>
