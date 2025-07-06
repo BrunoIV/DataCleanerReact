@@ -6,9 +6,11 @@ import { useState } from 'react';
 import { normalize } from './services/apiService';
 import { validate } from './services/apiService';
 import { fillAutoIncremental } from './services/apiService';
+import { loadHistory } from './services/apiService';
 import { fillFixedValue } from './services/apiService';
+import { newFile } from './services/apiService';
 import { addColumn } from './services/apiService';
-
+import React, { useRef } from 'react';
 
 
 function App() {
@@ -16,14 +18,43 @@ function App() {
 	const [selectedId, setSelectedId] = useState(null);
 	const [selectedCell, setSelectedCell] = useState(null);
 	const [validationErrors, setValidationErrors] = useState([]);
+	const [historyList, setHistoryList] = useState([]);
 	const [refreshGrid, setrefreshGrid] = useState(0);
+	const [selectedHistory, setSelectedHistory] = useState(0);
+	const [selectedError, setSelectedError] = useState(0);
 	const columns = [1];
+	const sidebarRef = useRef();
+
 
 	// Función que recibe el ID desde el hijo
 	const openFileWithId = (id) => {
 	  setSelectedId(id);
+	  doLoadHistory(id);
 	};
 
+	const doLoadHistory = (id) => {
+		loadHistory(id).then(response => {
+			setHistoryList(response);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+	};
+
+
+	const doNewFile = () => {
+		const name = prompt('New name?');
+		if(name !== null) {
+			newFile(name)
+			.then(response => {
+				sidebarRef.current?.loadFiles(); 
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		}
+	};
+	
 	const doValidation = (menu) => {
 		const fn = menu.split('_')[1];
 
@@ -80,9 +111,14 @@ function App() {
 
 		const actions = {
 
+			//New
+			new_file: (param) => doNewFile(param),
+
+
 			//Structure
 			//add_column_end: (param) => doAddColumn(),
 
+			
 			//Normalizations
 			normalization_uppercase: (param) => doNormalize(param),
 			normalization_lowercase: (param) => doNormalize(param),
@@ -105,7 +141,7 @@ function App() {
 		if (fn) {
 			fn(menu);
 		} else {
-		  console.error(`Invalid activo "${menu}"`);
+		  console.error(`Invalid action "${menu}"`);
 		}
 	}
 
@@ -119,7 +155,7 @@ function App() {
 
 		<div class="flex-grow-1">
 			<div class="h-100 w-100 d-flex flex-row">
-				<Sidebar openFile={openFileWithId}/>
+				<Sidebar ref={sidebarRef}  openFile={openFileWithId}/>
 				<div class="flex-grow-1">
 					<div class="h-100 w-100 d-flex flex-column">
 						<div class="flex-grow-1">
@@ -127,7 +163,21 @@ function App() {
 						</div>
 
 						<div id="status_bar">
-							<input type="radio" name="status_bar" id="status_bar_validations" checked />
+
+							<input type="radio" name="status_bar" id="status_bar_history" checked />
+							<label for="status_bar_history">History</label>
+
+							<div id="history" class="overflow-scroll px-2">
+								{historyList.map((history, index) => (
+									
+									<div key={index}>
+									<span class="material-symbols-outlined">error</span>
+                					<span>{history.date} :{history.description}</span>
+									</div>
+								))}
+							</div>
+
+							<input type="radio" name="status_bar" id="status_bar_validations" />
 							<label for="status_bar_validations">Validations</label>
 
 							<div id="validations" class="overflow-scroll px-2">

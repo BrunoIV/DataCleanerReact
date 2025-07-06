@@ -1,14 +1,24 @@
 const BASE_URL = 'http://localhost:8080';
 
 
+
+export const loadHistory = async (idFile) => {
+    return sendGet('file/getHistory/' + idFile);
+}
+
+export const newFile = async (name) => {
+    return sendPost({
+        name: name,
+        type: 'table'
+    }, 'file/new');
+}
+
 export const normalize = async (columns, functionName, idFile) => {
     const response = sendPost({
         columns: columns.join(','),
         functionName: functionName,
         idFile: idFile
     }, 'data/normalize');
-    
-    console.log(response);
 }
 
 export const validate = async (columns, functionName, idFile) => {
@@ -47,6 +57,16 @@ export const fillAutoIncremental = async (columns, idFile) => {
         idFile: idFile
     }, 'data/fillAutoIncremental');
 }
+
+export const sendGet = async (url) => {
+    const response = await fetch(`${BASE_URL}/${url}`);
+
+    if (!response.ok) {
+        throw new Error('Error fetching data');
+    }
+    return await response.json();
+}
+
 
 export const sendPost = async (data, url) => {
     const formData = new URLSearchParams();

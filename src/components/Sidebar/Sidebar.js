@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import './Sidebar.css';
 
-function Sidebar(props) {
+const Sidebar = forwardRef((props, ref) => {
 
 
   const lateralIcons = [{
@@ -57,6 +56,12 @@ function Sidebar(props) {
     loadFiles();
   }, []); // [] only one time
 
+
+  // Public method for parent
+  useImperativeHandle(ref, () => ({
+      loadFiles
+  }));
+
   return (
     <div id="sidebar">
       <div id="side_tabs">
@@ -99,6 +104,6 @@ function Sidebar(props) {
       </div>
   </div>
   );
-}
+});
 
 export default Sidebar;
