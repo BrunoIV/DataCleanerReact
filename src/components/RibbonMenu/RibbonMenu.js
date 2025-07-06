@@ -8,6 +8,25 @@ function RibbonMenu(props) {
     id: 'menu_file',
     title: 'File',
     groups: [{
+      title: 'New',
+      items: [{
+        icon: 'draft',
+        text: 'File',
+        id: 'new_file'
+      }]
+    },{
+      title: 'Save',
+      items: [{
+        icon: 'save',
+        text: 'Save',
+        id: 'save'
+      },{
+        icon: 'save_as',
+        text: 'Save as',
+        id: 'save_as'
+      }]
+    },{
+
       title: 'Import',
       items: [{
         icon: 'grid_on',
@@ -111,6 +130,17 @@ function RibbonMenu(props) {
         id: 'normalization_capitalize'
       }]
     },{
+      title: 'Search',
+      items: [{
+        icon: 'serif',
+        text: 'Text',
+        id: 'search_text'
+      },{
+        icon: 'tag',
+        text: 'Number',
+        id: 'search_number'
+      }]
+    },{
       title: 'Validation',
       items: [{
         icon: 'email',
@@ -141,25 +171,6 @@ function RibbonMenu(props) {
         id: 'fill_fixed_value'
       }]
     }]
-  /*},{
-    id: 'menu_chart',
-    title: 'Charts',
-    groups: [{
-      title: 'Charts',
-      items: [{
-        icon: 'pie_chart',
-        text: 'Pie',
-        id: 'chart_pie'
-      },{
-        icon: 'finance',
-        text: 'Bars',
-        id: 'chart_bars'
-      },{
-        icon: 'show_chart',
-        text: 'Line',
-        id: 'chart_line'
-      }]
-    }]*/
   }];
 
   const onClickEvent = (id) => {
