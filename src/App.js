@@ -17,7 +17,6 @@ import React, { useRef } from 'react';
 function App() {
 
 	const [selectedId, setSelectedId] = useState(null);
-	const [idHistory, setIdHistory] = useState(null);
 	const [selectedCell, setSelectedCell] = useState(null);
 	const [validationErrors, setValidationErrors] = useState([]);
 	const [historyList, setHistoryList] = useState([]);
@@ -166,7 +165,7 @@ function App() {
 	}
 
 	const loadRecordHistory = (idHistory) => {
-		setIdHistory(idHistory);
+		setSelectedHistory(idHistory);
 	}
 
   return (
@@ -179,7 +178,7 @@ function App() {
 				<div class="flex-grow-1">
 					<div class="h-100 w-100 d-flex flex-column">
 						<div class="flex-grow-1">
-							<DataGrid key={refreshGrid} selectedCell={selectedCell} idFile={selectedId} idHistory={idHistory} />
+							<DataGrid key={refreshGrid} selectedCell={selectedCell} idFile={selectedId} idHistory={selectedHistory} />
 						</div>
 
 						<div id="status_bar">
@@ -190,7 +189,7 @@ function App() {
 							<div id="history" class="overflow-scroll px-2">
 								{historyList.map((history, index) => (
 									
-									<div key={index} onClick={() => loadRecordHistory(history.id)}>
+									<div key={index} onClick={() => loadRecordHistory(history.id)} className={history.id === selectedHistory ? 'selected' : ''}>
 									<span class="material-symbols-outlined">error</span>
                 					<span>{history.date} :{history.description}</span>
 									</div>

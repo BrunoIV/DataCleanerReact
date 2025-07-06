@@ -36,10 +36,6 @@
     border-color: var(--accent-bg-color);
 }
 
-#tab_files li.selected {
-    background-color: var(--accent-bg-color);
-    color: var(--accent-text-color);
-}
 
 #tab_files li:hover {
     background-color: var(--accent-bg-color);

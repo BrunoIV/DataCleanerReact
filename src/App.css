@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  user-select: none;
 }
 
 :root {
@@ -119,4 +120,10 @@ html, body, #root {
 
 #status_bar input[type=radio]:checked + label + div {
   display: block;
+}
+
+
+.selected {
+  background-color: var(--accent-bg-color);
+  color: var(--accent-text-color);
 }
