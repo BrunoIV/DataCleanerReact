@@ -3,7 +3,7 @@ const BASE_URL = 'http://localhost:8080';
 
 
 export const loadHistory = async (idFile) => {
-    return sendGet('file/getHistory/' + idFile);
+    return sendGet('data/getHistory/' + idFile);
 }
 
 export const newFile = async (name) => {
