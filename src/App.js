@@ -8,6 +8,7 @@ import { validate } from './services/apiService';
 import { fillAutoIncremental } from './services/apiService';
 import { loadHistory } from './services/apiService';
 import { fillFixedValue } from './services/apiService';
+import { getRecordsFromHistory } from './services/apiService';
 import { newFile } from './services/apiService';
 import { addColumn } from './services/apiService';
 import React, { useRef } from 'react';
@@ -16,6 +17,7 @@ import React, { useRef } from 'react';
 function App() {
 
 	const [selectedId, setSelectedId] = useState(null);
+	const [idHistory, setIdHistory] = useState(null);
 	const [selectedCell, setSelectedCell] = useState(null);
 	const [validationErrors, setValidationErrors] = useState([]);
 	const [historyList, setHistoryList] = useState([]);
@@ -41,6 +43,16 @@ function App() {
 		});
 	};
 
+
+	const doSave = () => {
+		/*newFile(name)
+		.then(response => {
+			sidebarRef.current?.loadFiles(); 
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});*/
+	};
 
 	const doNewFile = () => {
 		const name = prompt('New name?');
@@ -114,6 +126,10 @@ function App() {
 			//New
 			new_file: (param) => doNewFile(param),
 
+			//Save
+			save: (param) => doNewFile(param),
+			save_as: (param) => doNewFile(param),
+
 
 			//Structure
 			//add_column_end: (param) => doAddColumn(),
@@ -149,17 +165,21 @@ function App() {
 		setSelectedCell({row: line, column: column});
 	}
 
+	const loadRecordHistory = (idHistory) => {
+		setIdHistory(idHistory);
+	}
+
   return (
 	<div class="h-100 w-100 d-flex flex-column">
 		<RibbonMenu clickButton={clickMenuButton} />
 
 		<div class="flex-grow-1">
 			<div class="h-100 w-100 d-flex flex-row">
-				<Sidebar ref={sidebarRef}  openFile={openFileWithId}/>
+				<Sidebar ref={sidebarRef} openFile={openFileWithId}/>
 				<div class="flex-grow-1">
 					<div class="h-100 w-100 d-flex flex-column">
 						<div class="flex-grow-1">
-							<DataGrid key={refreshGrid} selectedCell={selectedCell} idFile={selectedId} />
+							<DataGrid key={refreshGrid} selectedCell={selectedCell} idFile={selectedId} idHistory={idHistory} />
 						</div>
 
 						<div id="status_bar">
@@ -170,7 +190,7 @@ function App() {
 							<div id="history" class="overflow-scroll px-2">
 								{historyList.map((history, index) => (
 									
-									<div key={index}>
+									<div key={index} onClick={() => loadRecordHistory(history.id)}>
 									<span class="material-symbols-outlined">error</span>
                 					<span>{history.date} :{history.description}</span>
 									</div>

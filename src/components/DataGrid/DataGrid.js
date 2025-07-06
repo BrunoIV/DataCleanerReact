@@ -14,6 +14,12 @@ function DataGrid(props) {
   }, [props.idFile]);
   
   useEffect(() => {
+    if (props.idHistory) {
+      loadGridFromHistory(props.idHistory);
+    }
+  }, [props.idHistory]);
+  
+  useEffect(() => {
     if (props.selectedCell) {
       selectCell(props.selectedCell.row, props.selectedCell.column);
     }
@@ -73,6 +79,20 @@ function DataGrid(props) {
      console.error('Error loading data: ', error);
    }
  };
+
+ const loadGridFromHistory = async (idFile) => {
+  setIdFile(idFile);
+
+  try {
+    const response = await fetch(`http://localhost:8080/data/getData/history/${idFile}`);
+    const data = await response.json();
+
+    setColumnDefs(data.header);
+    setRowData(data.values);
+  } catch (error) {
+    console.error('Error loading data: ', error);
+  }
+};
 
  const onGridReady = (params) => {
   gridRef.current = params.api;
