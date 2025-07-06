@@ -3,6 +3,7 @@ import './DataGrid.css';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
+import { modifyValue } from './../../services/apiService';
 
 function DataGrid(props) {
 
@@ -224,6 +225,21 @@ function DataGrid(props) {
     });
   };
 
+  const onCellValueChanged = (params) => {
+    const { column, rowIndex, newValue, oldValue } = params;
+
+    const colIndex = params.api.getAllDisplayedColumns().findIndex(
+      (col) => col.getColId() === column.getColId()
+    );
+
+    modifyValue(colIndex - 1, rowIndex, props.idFile, newValue)
+			.then(response => {
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+  };
+
   return (
     <div className="ag-theme-quartz" style={{ height: '100%' }} >
       <AgGridReact
@@ -233,6 +249,7 @@ function DataGrid(props) {
         gridOptions={gridOptions}
         onCellClicked={onCellClick}
         onColumnHeaderClicked={onHeaderClick}
+        onCellValueChanged={onCellValueChanged}
         pagination="true"
         columnDefs={columnDefs}
       />

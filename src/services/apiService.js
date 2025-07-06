@@ -58,6 +58,17 @@ export const fillAutoIncremental = async (columns, idFile) => {
     }, 'data/fillAutoIncremental');
 }
 
+export const modifyValue = async (column, row, idFile, value) => {
+    return sendPostJson({
+        rowIndex: row,
+        colIndex: column,
+        value: value,
+        idFile: idFile
+    }, 'data/modifyValue');
+}
+
+
+
 export const sendGet = async (url) => {
     const response = await fetch(`${BASE_URL}/${url}`);
 
@@ -81,6 +92,28 @@ export const sendPost = async (data, url) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData.toString()
+    });
+
+    if (!response.ok) {
+        throw new Error('Error sending data');
+    }
+
+    return response.json();
+};
+
+export const sendPostJson = async (data, url) => {
+    const formData = new URLSearchParams();
+
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            formData.append(key, data[key]);
+        }
+    }
+
+    const response = await fetch(`${BASE_URL}/${url}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
     });
 
     if (!response.ok) {
