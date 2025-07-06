@@ -31,6 +31,7 @@ const Sidebar = forwardRef((props, ref) => {
 
 
   const [files, setFiles] = useState([]);
+  const [allFiles, setAllFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const loadFiles = async (selectLast = false) => {
@@ -48,9 +49,21 @@ const Sidebar = forwardRef((props, ref) => {
       }
 
       setFiles(data);
+      setAllFiles(data);
     } catch (error) {
       console.error('Error loading files:', error);
     }
+  };
+
+
+  const searchFile = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+  
+    const filtered = allFiles.filter(file =>
+      file.name.toLowerCase().includes(searchTerm)
+    );
+  
+    setFiles(filtered);
   };
 
   // after render
@@ -85,14 +98,23 @@ const Sidebar = forwardRef((props, ref) => {
 
       <div class="side_panel" id="tab_files" hidden={lateralTab != 'tab_files'}>
         <h1>Files</h1>
-        <header class="text-end">
-          <button>
-            <span class="material-symbols-outlined">add_box</span>
-          </button>
+        
+        <header>
+          <div class="row g-0">
+            <div class="col col-8">
+              <input placeholder="Search" type="text" onKeyUp={searchFile} />
+            </div>
 
-          <button>
-            <span class="material-symbols-outlined">delete</span>
-          </button>
+            <div class="col col-4 text-end">
+              <button>
+                <span class="material-symbols-outlined">add_box</span>
+              </button>
+
+              <button>
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </div>
+          </div>
       </header>
 
       <ul>
