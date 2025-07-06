@@ -97,6 +97,7 @@ const Sidebar = forwardRef((props, ref) => {
         {files.map((file, index) => (
         <li onDoubleClick={() => openFile(file.id)}>
           <span class="material-symbols-outlined">draft</span> { file.name }
+          <span className={`material-symbols-outlined ${file.unsavedChanges === true ? 'd-block' : 'd-none'}`} title="Unsaved changes">warning</span>
         </li>
         ))}
       </ul>
